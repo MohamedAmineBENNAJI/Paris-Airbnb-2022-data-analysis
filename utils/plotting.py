@@ -9,26 +9,30 @@ def plot_neighbourhoods(
     data: pd.DataFrame,
     address_column: str = "host_neighbourhood",
     price_column: str = "adjusted_price",
-    number_of_samples: int = 10,
+    n_samples: int = 10,
     most_expensive: bool = True,
     is_available: bool = True,
 ) -> None:
-    """This utility function is used to plot the most expensive and cheapest neighbourhoods according to certain conditions.
+    """This utility function is used to plot the most expensive and cheapest
+    neighbourhoods according to certain conditions.
 
     Arguments:
         data: The input dataframe.
         address_column: The column containing the host's neighbourhood address.
         price_column: The column indicating the final prices for the listing.
-        number_of_samples: The number of samples to plot.
-        most_expensive: A boolean indicating whether to plot the most expensive or the cheapest listings.
+        n_samples: The number of samples to plot.
+        most_expensive: A boolean indicating whether to plot the most
+        expensive or the cheapest listings.
         is_available: A boolean indiating the availability of the listings.
     """
     availability = {True: "available", False: "booked"}
     if most_expensive:
-
-        title = f"Top {number_of_samples} most expensive {availability[is_available]} listings in Paris"
+        booked = availability[is_available]
+        title = f"Top {n_samples} most expensive {booked} listings in Paris"
     else:
-        title = f"Top {number_of_samples} cheapest {availability[is_available]} listings in Paris"
+        booked = availability[is_available]
+
+        title = f"Top {n_samples} cheapest {booked} listings in Paris"
 
     data = data.loc[data.available == is_available]
     neighbourhoods = (
@@ -36,8 +40,8 @@ def plot_neighbourhoods(
         .mean()[price_column]
         .sort_values(ascending=not (most_expensive))
     )
-    neighbourhoods_names = neighbourhoods[:number_of_samples].keys()
-    prices = neighbourhoods[:number_of_samples].values
+    neighbourhoods_names = neighbourhoods[:n_samples].keys()
+    prices = neighbourhoods[:n_samples].values
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 20))
     palette_color = sns.color_palette("bright")
     fig.suptitle(title, fontweight="bold", fontsize=30, y=0.95)
